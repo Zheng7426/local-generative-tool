@@ -4,7 +4,7 @@ import requests
 import math
 import pandas as pd
 
-@st.cache_data
+# @st.cache_data
 def get_response(url):
     response = requests.get(url, headers={
         "Authorization": f"Bearer {api_key}"
