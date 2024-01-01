@@ -104,3 +104,10 @@ if st.button("生成图像"):
                 f.write(base64.b64decode(image["base64"]))
             st.success('已生成！')
             st.image(f"./out/v1_txt2img_{i}.png")
+            with open(f"./out/v1_txt2img_{i}.png", "rb") as file:
+                btn = st.download_button(
+                    label="下载图片",
+                    data=file,
+                    file_name=f"v1_txt2img_{i}.png",
+                    mime="image/png")
+                
