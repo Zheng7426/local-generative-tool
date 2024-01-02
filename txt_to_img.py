@@ -22,7 +22,8 @@ with col1:
     height = st.number_input('height',
       label_visibility='collapsed',
       value=512,
-      min_value=128)
+      min_value=128,
+      step=64)
 
     st.markdown("#### cfg_scale [0-35]")
     cfg_scale = st.number_input('cfg_scale', 
@@ -39,7 +40,8 @@ with col2:
     width = st.number_input('width',
       label_visibility='collapsed',
       value=512,
-      min_value=128)
+      min_value=128,
+      step=64)
 
     st.markdown("#### Steps [10-50]")
     steps = st.number_input('steps',
@@ -71,6 +73,28 @@ with col4:
         max_value=10,
         step=1,)
     st.write('Number of images to generate.')
+
+col5, col6 = st.columns(2)
+with col5:
+    st.markdown('#### Sampler')
+    sampler = st.selectbox("Sampler",
+    ("DDIM", "DDPM", "K_DPMPP_2M",
+     "K_DPMPP_2S_ANCESTRAL", "K_DPM_2", "K_DPM_2_ANCESTRAL",
+     "K_EULER", "K_EULER_ANCESTRAL", "K_HEUN K_LMS"),
+     index=None,
+     label_visibility='collapsed',
+     placeholder="选择一个样本选择器...")
+    st.write("Which sampler to use for the diffusion process. If this value is omitted we'll automatically select an appropriate sampler for you.")
+with col6:
+    st.markdown('#### Seed [0 - 4294967295]')
+    seed = st.number_input('seed',
+        label_visibility='collapsed',
+        value=0,
+        min_value=0,
+        max_value=4294967295,
+        step=1,)
+    st.write("Random noise seed (omit this option or use 0 for a random seed)")
+
 if st.button("生成图像"):
     with st.spinner("正在生成中...", cache=False):
         response = requests.post(f"{api_host}/v1/generation/{engine_id}/text-to-image",
@@ -90,6 +114,8 @@ if st.button("生成图像"):
             "width": width,
             "samples": samples,
             "steps": steps,
+            "sampler": sampler,
+            "seed": seed,
             "style_preset": style_preset,
         },
         )
